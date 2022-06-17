@@ -1,0 +1,66 @@
+import zipfile
+import os
+import shutil
+path="D:/Dataset"
+Raw_footage="raw_footage"
+processed_footage="processed_footage"
+annotated_footage="annotated_dataset"
+def un_zipFiles(path):
+    files=os.listdir(path)
+    
+    for file in files:
+        if file.endswith('.zip'):
+            filePath=path+'/'+file
+            zip_file = zipfile.ZipFile(filePath)
+            print(zip_file)
+            file_names=[]
+            for names in zip_file.namelist():
+                file_names.append(names)
+                zip_file.extract(names,path)
+                x = file_names[0]
+    
+                week_ending=x.split("/")[0]
+                y = names.split("/")[-1].split("-")
+                
+                angle,project = y[0],y[1]
+                
+                y = y[2].split("_")
+                
+                Tier,date,actor = y[0],y[1],y[2]
+            
+            if os.path.exists(path+"/"+project):
+                os.mkdir(path+"/"+project+"/"+week_ending)
+                os.mkdir(path+"/"+project+"/"+week_ending+"/"+Raw_footage)
+                os.mkdir(path+"/"+project+"/"+week_ending+"/"+processed_footage)
+                os.mkdir(path+"/"+project+"/"+week_ending+"/"+annotated_footage)
+                
+                videos_data=os.listdir(path+"/"+week_ending)
+                
+                for videos in videos_data:
+                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+week_ending+"/"+Raw_footage)
+                
+                empty_dir_path=path+"/"+week_ending
+                
+                os.rmdir(empty_dir_path)
+            else:   
+                print("TRUE")
+                os.mkdir(path+"/"+project)
+                os.mkdir(path+"/"+project+"/"+week_ending)
+                os.mkdir(path+"/"+project+"/"+week_ending+"/"+Raw_footage)
+                os.mkdir(path+"/"+project+"/"+week_ending+"/"+processed_footage)
+                os.mkdir(path+"/"+project+"/"+week_ending+"/"+annotated_footage)
+               
+                
+                videos_data=os.listdir(path+"/"+week_ending)
+                
+                for videos in videos_data:
+                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+week_ending+"/"+Raw_footage)
+                
+                empty_dir_path=path+"/"+week_ending
+                
+                os.rmdir(empty_dir_path)
+            zip_file.close()
+            
+
+
+un_zipFiles(path)
