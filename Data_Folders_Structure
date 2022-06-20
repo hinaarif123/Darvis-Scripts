@@ -29,15 +29,13 @@ def un_zipFiles(path):
                 Tier,date,actor = y[0],y[1],y[2]
             
             if os.path.exists(path+"/"+project):
-                os.mkdir(path+"/"+project+"/"+week_ending)
-                os.mkdir(path+"/"+project+"/"+week_ending+"/"+Raw_footage)
-                os.mkdir(path+"/"+project+"/"+week_ending+"/"+processed_footage)
-                os.mkdir(path+"/"+project+"/"+week_ending+"/"+annotated_footage)
                 
+                os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+               
                 videos_data=os.listdir(path+"/"+week_ending)
                 
                 for videos in videos_data:
-                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+week_ending+"/"+Raw_footage)
+                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+Raw_footage+"/"+week_ending)
                 
                 empty_dir_path=path+"/"+week_ending
                 
@@ -45,22 +43,19 @@ def un_zipFiles(path):
             else:   
                 print("TRUE")
                 os.mkdir(path+"/"+project)
-                os.mkdir(path+"/"+project+"/"+week_ending)
-                os.mkdir(path+"/"+project+"/"+week_ending+"/"+Raw_footage)
-                os.mkdir(path+"/"+project+"/"+week_ending+"/"+processed_footage)
-                os.mkdir(path+"/"+project+"/"+week_ending+"/"+annotated_footage)
+                os.mkdir(path+"/"+project+"/"+Raw_footage)
+                os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                os.mkdir(path+"/"+project+"/"+processed_footage)
+                os.mkdir(path+"/"+project+"/"+annotated_footage)
                
                 
                 videos_data=os.listdir(path+"/"+week_ending)
                 
                 for videos in videos_data:
-                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+week_ending+"/"+Raw_footage)
+                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+Raw_footage+"/"+week_ending)
                 
                 empty_dir_path=path+"/"+week_ending
                 
                 os.rmdir(empty_dir_path)
             zip_file.close()
-            
-
-
 un_zipFiles(path)
