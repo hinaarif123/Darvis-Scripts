@@ -1,0 +1,306 @@
+import zipfile
+import os
+import re
+import shutil
+Raw_footage="raw_footage"
+processed_footage="processed_footage"
+annotated_footage="annotated_dataset"
+no_qr="No QR Code"
+qr_code="QR Code Front"
+Dryer="Dryer"
+DMicrowave="Dryer - Microwave Stack"
+Fridge="Fridge"
+Microwave="Microwave"
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
+path = askdirectory(title='Select Folder')
+print(path)
+project = input("Enter your project name: ")
+print(project)
+project_path=path+"/"+project
+
+# creation of project folder 
+
+os.mkdir(project_path)
+
+# creation of basic folder structure
+
+os.mkdir(project_path+"/"+Raw_footage)
+os.mkdir(project_path+"/"+processed_footage)
+os.mkdir(project_path+"/"+annotated_footage)
+
+def THD_Folders(file_names,project):
+    
+    for names in file_names:
+       
+        words=names.split("/")
+        print("File_path",words)
+        txt = words[-1] 
+        print(txt)
+       
+    
+        #Check if "QR Code Front" is in the string:
+        x = re.findall("QRCodeFront", txt)
+        print(x)
+        if(x):
+            code="QR Code Front"
+        else:
+            code="No QR Code"
+            
+        #storing week ending into variable
+        week_ending=words[0]
+        
+        #storing week ending path 
+        week_ending_path=project_path+"/"+week_ending
+        
+        extracted_path=path+"/"+week_ending
+        
+        list_words=re.findall(r"[\w']+", words[-1])
+        
+        print("videos names:",list_words)
+        
+        if(len(list_words) != 0):
+
+            object_names=list_words[2]
+            
+            print("object names",object_names)
+
+        else:
+            
+            object_names="empty"
+            
+       
+        if os.path.exists(path+"/"+project+"/"+Raw_footage+"/"+week_ending):
+                
+                
+               
+                if(object_names == "Dryer"  or  object_names== "Fridge" or object_names == "Microwave"):
+                
+                  videos_data=os.listdir(path+"/"+week_ending+"/"+object_names+"/"+code)
+                
+                  for videos in videos_data:
+                    
+                    shutil.move(path+"/"+week_ending+"/"+object_names+"/"+code+"/"+videos, path+"/"+project+"/"+Raw_footage+"/"+week_ending+"/"+code+"/"+object_names)
+                 
+                elif (object_names == "DMStack" or object_names=="DMStacked"):
+                    
+                    object_names="Dryer - Microwave Stack"
+                    
+                    videos_data=os.listdir(path+"/"+week_ending+"/"+object_names+"/"+code)
+                
+                    for videos in videos_data:
+                    
+                        shutil.move(path+"/"+week_ending+"/"+object_names+"/"+code+"/"+videos, path+"/"+project+"/"+Raw_footage+"/"+week_ending+"/"+code+"/"+object_names)
+                else:
+                        
+                        print("object_names is empty")
+                        
+                       
+                #empty_dir_path=path+"/"+week_ending
+                
+                #os.rmdir(empty_dir_path)
+        else:   
+                print("TRUE")
+                #os.mkdir(path+"/"+week_ending)
+                
+                os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+no_qr)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+qr_code)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+no_qr+"/"+Dryer)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+no_qr+"/"+DMicrowave)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+no_qr+"/"+Fridge)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+no_qr+"/"+Microwave)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+qr_code+"/"+Dryer)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+qr_code+"/"+DMicrowave)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+qr_code+"/"+Fridge)
+                os.mkdir(project_path+"/"+Raw_footage+"/"+week_ending+"/"+qr_code+"/"+Microwave)
+               
+               
+               def T_system(file_names,project):
+    
+    for names in file_names:
+        
+        words=names.split("/")
+        
+        print("file_path",words)
+        
+        fill_level=words[1]
+        
+        print("fill_level is:",fill_level)
+        
+        video_name=words[-1]
+        
+        print("video names",video_name)
+    
+        week_ending=words[0]
+        
+        print("week ending is :",week_ending)
+        
+        list_words=re.findall(r"[\w']+", words[-1])
+        
+        pattern = "\d{2}[/.]\d{2}[/.]\d{4}"
+        
+        date=(re.findall(pattern, words[-1]))
+        
+        proc_date=date[0]
+        
+        print("process date is :",date)
+        
+        print("videos splited format:",list_words)        
+        
+        project_name=list_words[1]
+        
+        print("project name is :",project_name)
+        
+        angle=list_words[0]
+        
+        print("Angle is :",angle)
+    
+        if os.path.exists(path+"/"+project+"/"+Raw_footage+"/"+week_ending):
+            videos_data=os.listdir(path+"/"+week_ending)   
+            
+            for videos in videos_data:
+                
+                shutil.move(path+"/"+week_ending+"/"+videos,path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+        
+        else:
+             
+                os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                os.mkdir(path+"/"+project+"/"+processed_footage+"/"+week_ending)
+                
+                if os.path.exists(path+"/"+project+"/"+processed_footage+"/"+week_ending+"/"+proc_date):
+                     print("goes well:::")
+                else:
+                    os.mkdir(path+"/"+project+"/"+processed_footage+"/"+week_ending+"/"+proc_date)
+                
+   def fall_prevention(file_names,project): 
+            
+    for names in file_names:
+        
+        words=names.split("/")
+        
+        print("file_path",words)
+    
+        week_ending=words[0]
+        
+        print("week ending is :",week_ending)
+            
+            
+        if os.path.exists(path+"/"+project):
+                
+            if os.path.exists(path+"/"+project+"/"+Raw_footage+"/"+week_ending):
+                    videos_data=os.listdir(path+"/"+week_ending)
+            else:
+                    os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+            
+            videos_data=os.listdir(path+"/"+week_ending)        
+            for videos in videos_data:
+                shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                
+            #empty_dir_path=path+"/"+week_ending
+                
+            #os.rmdir(empty_dir_path)
+        else:   
+                print("TRUE")
+                os.mkdir(path+"/"+project)
+                os.mkdir(path+"/"+project+"/"+Raw_footage)
+                os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                os.mkdir(path+"/"+project+"/"+processed_footage)
+                os.mkdir(path+"/"+project+"/"+annotated_footage)
+               
+                
+                videos_data=os.listdir(path+"/"+week_ending)
+                
+                for videos in videos_data:
+                    shutil.move(path+"/"+week_ending+"/"+videos, path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                
+                #empty_dir_path=path+"/"+week_ending
+                
+                #os.rmdir(empty_dir_path) 
+        
+        
+        def Darvis_shield(file_names,project):
+    
+    for names in file_names:
+        
+        words=names.split("/")
+        
+        print("file_path",words)
+        
+        fill_level=words[1]
+        
+        print("fill_level is:",fill_level)
+        
+        video_name=words[-1]
+        
+        print("video names",video_name)
+    
+        week_ending=words[0]
+        
+        print("week ending is :",week_ending)
+        
+        list_words=re.findall(r"[\w']+", words[-1])
+        
+        print("videos splited format:",list_words)        
+        
+        project_name=list_words[1]
+        
+        print("project name is :",project_name)
+        
+        angle=list_words[0]
+        
+        print("Angle is :",angle)
+    
+        if os.path.exists(path+"/"+project+"/"+Raw_footage+"/"+week_ending):
+            
+            videos_data=os.listdir(path+"/"+week_ending)   
+            
+            for videos in videos_data:
+                
+                shutil.move(path+"/"+week_ending+"/"+videos,path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+        
+        else:
+             
+                os.mkdir(path+"/"+project+"/"+Raw_footage+"/"+week_ending)
+                os.mkdir(path+"/"+project+"/"+processed_footage+"/"+week_ending)
+         
+    def un_zipFiles(path,project):
+    
+    files=os.listdir(path)
+    
+    for file in files:
+        if file.endswith('.zip'):
+            file_path=path+'/'+file
+            zip_file = zipfile.ZipFile(file_path)
+            print(zip_file)
+            file_names=[]
+            for names in zip_file.namelist():
+                
+                file_names.append(names)
+                
+                zip_file.extract(names,path)
+                
+            zip_file.close()
+            print("filenames",file_names)
+            
+            if (project == "Tsystem"):
+                
+                T_system(file_names,project)
+            
+            elif (project == "Fallprevention"):
+                
+                fall_prevention(file_names,project)
+            
+            elif(project == "darvis_shield"):
+                 
+                Darvis_shield(file_names,project)
+            
+            elif(project == "THD"):
+                THD_Folders(file_names,project)
+            
+            else:
+                print("Not available this project structure:",project)
+            
+un_zipFiles(path,project)     
+         
+     
